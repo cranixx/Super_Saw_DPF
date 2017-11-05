@@ -8,7 +8,7 @@ package body Polyphony is
    begin
       if Number_Of_Notes < 4 then
          if Note_Exist(Pitch) = False then
-            Notes(Number_Of_Notes) := Pitch;
+            Notes(Number_Of_Notes) := Float(Pitch);
             Number_Of_Notes := Number_Of_Notes + 1;
          end if;
       end if;
@@ -17,7 +17,7 @@ package body Polyphony is
    procedure Remove_Note(Pitch : Interfaces.C.C_Float) is
    begin
       for I in Notes'Range loop
-         if Notes(I) = Pitch then
+         if Notes(I) = Float(Pitch) then
             Notes(I) := 0.0;
             Number_Of_Notes := Number_Of_Notes - 1;
          end if;
@@ -35,7 +35,7 @@ package body Polyphony is
    function Note_Exist (Pitch : Interfaces.C.C_Float) return Boolean is
    begin
       for I in Notes'Range loop
-         if Notes(I) = Pitch then
+         if Notes(I) = Float(Pitch) then
             return True;
          end if;
       end loop;
