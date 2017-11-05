@@ -3,10 +3,9 @@ use Interfaces.C;
 
 package body Polyphony is
    Notes : Note_Array;
-   Number_Of_Notes : Integer;
    procedure Add_Note(Pitch : Interfaces.C.C_Float) is
    begin
-      if Number_Of_Notes < 4 then
+      if Number_Of_Notes <= Maximum_Num_Of_Notes then
          if Note_Exist(Pitch) = False then
             Notes(Number_Of_Notes) := Float(Pitch);
             Number_Of_Notes := Number_Of_Notes + 1;
@@ -41,7 +40,5 @@ package body Polyphony is
       end loop;
       return False;
    end Note_Exist;
-begin
-   Number_Of_Notes := 0;
 end Polyphony;
 
