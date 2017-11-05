@@ -102,11 +102,19 @@ protected:
   }
 
 
-  void run(const float** inputs, float** outputs, uint32_t frames) override {
+  void run(const float** inputs, float** outputs, uint32_t frames, const MidiEvent* midiEvents, uint32_t midiEventCount) override {
     uint32_t i;
-    for(i=0;i<frames;i++){
-      outputs[0][i] = Super_Saw(phase,1000.0,detune,mix,getSampleRate())/50.0;
-      phase++;
+    const uint8_t*  data = midiEvents[0].data;
+    const uint8_t status = data[0] & 0xF0;
+    uint8_t note;
+    float frequency;
+    if (status == 0x90) {
+      note = data[1];
+      frequency = pow(2.0,(note-69.0)/12.0)*440.0;
+      for(i=0;i<frames;i++){
+        outputs[0][i] = Super_Saw(phase,frequency,detune,mix,getSampleRate())/50.0;
+        phase++;
+      }
     }
   }
 private:
