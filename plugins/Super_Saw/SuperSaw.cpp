@@ -8,7 +8,7 @@ START_NAMESPACE_DISTRHO
 class SuperSaw : public Plugin
 {
 public:
-  SuperSaw() : Plugin(0,0,0) {
+  SuperSaw() : Plugin(1,0,0){
         adainit();
   }
 
@@ -64,30 +64,37 @@ protected:
   {
     return d_cconst('d', 'N', 'f', 'o');
   }
-  void setParameterValue(uint32_t, float) override
+  void setParameterValue(uint32_t index, float value) override
   {
-    // this is only called for input paramters, which we have none of.
+    detune = value;
   }
 
   float getParameterValue(uint32_t index) const override
   {
-    //    return fParameters[index];
+    return detune;
 
   }
 
   void initParameter(uint32_t index, Parameter& parameter) override {
+    parameter.hints      = kParameterIsAutomable;
+    parameter.name       = "Detune";
+    parameter.symbol     = "detune";
+    parameter.ranges.min = 0.0f;
+    parameter.ranges.max = 1.0f;
+    parameter.ranges.def = 0.5f;
   }
 
 
   void run(const float** inputs, float** outputs, uint32_t frames) override {
     uint32_t i;
     for(i=0;i<frames;i++){
-      outputs[0][i] = Super_Saw(phase,1000.0,0.7,0.5,getSampleRate())/50.0;
+      outputs[0][i] = Super_Saw(phase,1000.0,detune,0.5,getSampleRate())/50.0;
       phase++;
     }
   }
 private:
   float phase=0;
+  float detune;
 
 };
 

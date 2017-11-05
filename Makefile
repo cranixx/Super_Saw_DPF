@@ -21,7 +21,7 @@ plugins: libs
 	$(MAKE) all -C plugins/Meters
 	$(MAKE) all -C plugins/Parameters
 	$(MAKE) all -C plugins/States
-	$(MAKE) all -C plugins/sine
+	$(MAKE) all -C plugins/Super_Saw
 
 gen: plugins dpf/utils/lv2_ttl_generator
 	@$(CURDIR)/dpf/utils/generate-ttl.sh

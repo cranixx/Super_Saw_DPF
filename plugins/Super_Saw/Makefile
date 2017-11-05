@@ -42,8 +42,8 @@ TARGETS += vst
 
 ADA:
 	gnat make -fPIC super_saw
-	gnat make -fPIC b~super_saw
 	gnat bind -n super_saw
+	gnat make -fPIC b~super_saw
 	gnat bind -n b~super_saw
 
 BASE_FLAGS +=  super_saw.o b~super_saw.o  -lgnat -lgnarl -lgmem
