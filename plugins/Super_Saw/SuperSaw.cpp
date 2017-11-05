@@ -110,7 +110,7 @@ protected:
     float frequency;
     if (status == 0x90) {
       note = data[1];
-      frequency = pow(2.0,(note-69.0)/12.0)*440.0;
+      frequency = pow(2.0,(note-57.0)/12.0)*440.0;
       for(i=0;i<frames;i++){
         outputs[0][i] = Super_Saw(phase,frequency,detune,mix,getSampleRate())/50.0;
         phase++;
