@@ -27,8 +27,13 @@ package body Polyphony is
                               Pitch : Interfaces.C.C_Float;Detune : Interfaces.C.C_Float;
                               Mix : Interfaces.C.C_Float;
                               Sample_Rate : Interfaces.C.C_Float) return Interfaces.C.C_Float is
+      Sample : Interfaces.C.C_Float := 0.0;
    begin
-      return 0.0;
+      for I in 1..Number_Of_Notes loop
+         Sample := Sample + Super_Saw.Super_Saw(Time,Interfaces.C.C_Float(Notes(I)),
+                                                Detune,Mix,Sample_Rate);
+      end loop;
+      return Sample;
    end Compute_Polyphony;
 
    function Note_Exist (Pitch : Interfaces.C.C_Float) return Boolean is
