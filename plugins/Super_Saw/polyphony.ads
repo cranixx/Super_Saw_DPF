@@ -5,7 +5,7 @@ with Super_Saw;
 use Super_Saw;
 
 package Polyphony is
-   type Note_Array is array (1..4) of Float;
+   type Note_Array is array (0..3) of Float;
    Number_Of_Notes : Integer := 0;
    Maximum_Num_Of_Notes : constant Integer := 4;
    procedure Add_Note(Pitch : Interfaces.C.C_Float) with

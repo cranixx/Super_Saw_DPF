@@ -114,16 +114,17 @@ protected:
       note = data[1];
       frequency = pow(2.0,(note-57.0)/12.0)*440.0;
       Add_Note(frequency);
+      for(i=0;i<frames;i++){
+        outputs[0][i] = Compute_Polyphony(phase,frequency,detune,mix,getSampleRate())/50.0;
+        phase++;
+    }
     } else if (status == 0x80) //Note off
     {
       note = data[1];
       frequency = pow(2.0,(note-57.0)/12.0)*440.0;
-      //    Remove_Note(frequency);
+          Remove_Note(frequency);
     }
-    for(i=0;i<frames;i++){
-      //outputs[0][i] = Compute_Polyphony(phase,frequency,detune,mix,getSampleRate())/50.0;
-      phase++;
-    }
+   
 }
 private:
   float phase=0;

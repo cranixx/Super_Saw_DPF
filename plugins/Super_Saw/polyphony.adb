@@ -5,7 +5,7 @@ package body Polyphony is
    Notes : Note_Array;
    procedure Add_Note(Pitch : Interfaces.C.C_Float) is
    begin
-      if Number_Of_Notes <= Maximum_Num_Of_Notes then
+      if Number_Of_Notes < Maximum_Num_Of_Notes then
          if Note_Exist(Pitch) = False then
             Notes(Number_Of_Notes) := Float(Pitch);
             Number_Of_Notes := Number_Of_Notes + 1;
@@ -29,7 +29,7 @@ package body Polyphony is
                               Sample_Rate : Interfaces.C.C_Float) return Interfaces.C.C_Float is
       Sample : Interfaces.C.C_Float := 0.0;
    begin
-      for I in 1..Number_Of_Notes loop
+      for I in 0..(Number_Of_Notes-1) loop
          Sample := Sample + Super_Saw.Super_Saw(Time,Interfaces.C.C_Float(Notes(I)),
                                                 Detune,Mix,Sample_Rate);
       end loop;
