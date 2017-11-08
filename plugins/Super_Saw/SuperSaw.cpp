@@ -2,7 +2,10 @@
 #include <math.h>
 extern "C" void adainit(void);
 extern "C" void adafinal(void);
-extern "C" float Super_Saw(float,float,float,float,float);
+//extern "C" float Super_Saw(float,float,float,float,float);
+extern "C" void Add_Note(float);
+extern "C" void Remove_Note(float);
+extern "C" float Compute_Polyphony(float,float,float,float,float);
 
 START_NAMESPACE_DISTRHO
 class SuperSaw : public Plugin
@@ -80,7 +83,6 @@ protected:
     } else if (index == 1) {
       return mix;
     }
-
   }
 
   void initParameter(uint32_t index, Parameter& parameter) override {
@@ -108,15 +110,21 @@ protected:
     const uint8_t status = data[0] & 0xF0;
     uint8_t note;
     float frequency;
-    if (status == 0x90) {
+    if (status == 0x90) { //Note on
       note = data[1];
       frequency = pow(2.0,(note-57.0)/12.0)*440.0;
-      for(i=0;i<frames;i++){
-        outputs[0][i] = Super_Saw(phase,frequency,detune,mix,getSampleRate())/50.0;
-        phase++;
-      }
+      Add_Note(frequency);
+    } else if (status == 0x80) //Note off
+    {
+      note = data[1];
+      frequency = pow(2.0,(note-57.0)/12.0)*440.0;
+      //    Remove_Note(frequency);
     }
-  }
+    for(i=0;i<frames;i++){
+      //outputs[0][i] = Compute_Polyphony(phase,frequency,detune,mix,getSampleRate())/50.0;
+      phase++;
+    }
+}
 private:
   float phase=0;
   float detune;
