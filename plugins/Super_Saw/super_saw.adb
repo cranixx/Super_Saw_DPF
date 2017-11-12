@@ -10,36 +10,36 @@ use Ada.Numerics.Elementary_Functions;
 package body Super_Saw is
    function Super_Saw(Time : Interfaces.C.C_Float; Pitch : Interfaces.C.C_Float;
                            Detune : Interfaces.C.C_Float; Mix : Interfaces.C.C_Float;
-                           Sample_Rate : Interfaces.C.C_Float)
+                           Sample_Rate : Interfaces.C.C_Float; Harmonics : Interfaces.C.int)
      return Interfaces.C.C_Float is
       Offsets : Offset_Array_Type := (0.01952356,0.06288439,0.11002313);
       Sample : Float := 0.0;
       Mix_Level : Mix_Level_Type := Compute_Mix(Float(Mix));
    begin
       -- Main oscillator
-      Sample := Sample + Saw(Float(Time),Float(Pitch), Float(Sample_Rate))*Mix_Level.Master;
+      Sample := Sample + Saw(Float(Time),Float(Pitch), Float(Sample_Rate),Integer(Harmonics))*Mix_Level.Master;
 
       -- 3 oscillators of higher pitch than main
       Higher_Oscillators:for D in 1 .. 3 loop
          Sample := Sample + Saw(Float(Time),Float(Pitch)*(1.0+Offsets(D)*Compute_Detune(Float(Detune))),
-                                Float(Sample_Rate))*Mix_Level.Slave;
+                                Float(Sample_Rate),Integer(Harmonics))*Mix_Level.Slave;
       end loop Higher_Oscillators;
 
       -- 3 oscillators of lower pitch than main
       Lower_Oscillators:for D in 1 .. 3 loop
          Sample := Sample + Saw(Float(Time),Float(Pitch)*(1.0+Offsets(D)*Compute_Detune(Float(Detune))),
-                                Float(Sample_Rate))*Mix_Level.Slave;
+                                Float(Sample_Rate),Integer(Harmonics))*Mix_Level.Slave;
       end loop Lower_Oscillators;
       return Interfaces.C.C_FLoat(Sample);
    end Super_Saw;
 
-   function Saw(Time : Float; Pitch : Float; Sample_Rate : Float) return Float is
-      Number_Of_Harmonics : Integer := 0;
+   function Saw(Time : Float; Pitch : Float; Sample_Rate : Float; Harmonics : Integer) return Float is
+      Number_Of_Harmonics : Integer := Harmonics;
       Sample : Float := 0.0;
    begin
-      while 2.0*Pi*Pitch*Float(Number_Of_Harmonics) < Sample_Rate/2.0 loop
-         Number_Of_Harmonics := Number_Of_Harmonics + 1;
-      end loop;
+  --    while 2.0*Pi*Pitch*Float(Number_Of_Harmonics) < Sample_Rate/2.0 loop
+ --        Number_Of_Harmonics := Number_Of_Harmonics + 1;
+--      end loop;
 
       for I in 1 .. Number_Of_Harmonics loop
          Sample := Sample + ((((1.0)**Float(I))*Sin(Float(I)*((2.0*Pi*Pitch)/Sample_Rate)*Time)));

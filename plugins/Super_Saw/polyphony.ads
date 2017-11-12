@@ -17,7 +17,8 @@ package Polyphony is
    function Compute_Polyphony(Time : Interfaces.C.C_Float;
                               Pitch : Interfaces.C.C_Float;Detune : Interfaces.C.C_Float;
                               Mix : Interfaces.C.C_Float;
-                              Sample_Rate : Interfaces.C.C_Float) return Interfaces.C.C_Float;
+                              Sample_Rate : Interfaces.C.C_Float;
+                              Harmonics : Interfaces.C.int) return Interfaces.C.C_Float;
 
    pragma Export(CPP,Add_Note,"Add_Note");
    pragma Export(CPP,Remove_Note,"Remove_Note");

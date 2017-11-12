@@ -5,13 +5,13 @@ extern "C" void adafinal(void);
 //extern "C" float Super_Saw(float,float,float,float,float);
 extern "C" void Add_Note(float);
 extern "C" void Remove_Note(float);
-extern "C" float Compute_Polyphony(float,float,float,float,float);
+extern "C" float Compute_Polyphony(float,float,float,float,float,int);
 
 START_NAMESPACE_DISTRHO
 class SuperSaw : public Plugin
 {
 public:
-  SuperSaw() : Plugin(2,0,0){
+  SuperSaw() : Plugin(3,0,0){
         adainit();
   }
 
@@ -73,6 +73,8 @@ protected:
       detune = value;
     } else if (index == 1) {
       mix = value;
+    } else if (index == 2) {
+      harmonics = value;
     }
   }
 
@@ -82,6 +84,8 @@ protected:
       return detune;
     } else if (index == 1) {
       return mix;
+    } else if (index == 2) {
+      return harmonics;
     }
   }
 
@@ -100,7 +104,15 @@ protected:
       parameter.ranges.min = 0.0f;
       parameter.ranges.max = 1.0f;
       parameter.ranges.def = 0.5f;
+    } else if (index == 2) { /*Harmonics*/
+      parameter.hints      = kParameterIsAutomable;
+      parameter.name       = "Harmonics";
+      parameter.symbol     = "Harmonics";
+      parameter.ranges.min = 1;
+      parameter.ranges.max = 20;
+      parameter.ranges.def = 7;
     }
+
   }
 
 
@@ -115,7 +127,7 @@ protected:
       frequency = pow(2.0,(note-57.0)/12.0)*440.0;
       Add_Note(frequency);
       for(i=0;i<frames;i++){
-        outputs[0][i] = Compute_Polyphony(phase,frequency,detune,mix,getSampleRate())/50.0;
+        outputs[0][i] = Compute_Polyphony(phase,frequency,detune,mix,getSampleRate(),harmonics)/50.0;
         phase++;
     }
     } else if (status == 0x80) //Note off
@@ -130,6 +142,7 @@ private:
   float phase=0;
   float detune;
   float mix;
+  int harmonics;
 };
 
 Plugin* createPlugin()
