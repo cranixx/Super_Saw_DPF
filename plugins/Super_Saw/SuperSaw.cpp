@@ -90,14 +90,14 @@ protected:
       parameter.name       = "Detune";
       parameter.symbol     = "detune";
       parameter.ranges.min = 0.0f;
-      parameter.ranges.max = 1.0f;
+      parameter.ranges.max = 0.9f;
       parameter.ranges.def = 0.5f;
     } else if (index == 1) { /*Mix*/
       parameter.hints      = kParameterIsAutomable;
       parameter.name       = "Mix";
       parameter.symbol     = "mix";
       parameter.ranges.min = 0.0f;
-      parameter.ranges.max = 1.0f;
+      parameter.ranges.max = 0.9f;
       parameter.ranges.def = 0.5f;
     }
   }

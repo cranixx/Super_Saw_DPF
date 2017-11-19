@@ -31,7 +31,7 @@ package body Super_Saw is
          Sample := Sample + Saw(Float(Time),Float(Pitch)*(1.0+Offsets(D)*Compute_Detune(Float(Detune))),
                                 Float(Sample_Rate))*Mix_Level.Slave;
       end loop Lower_Oscillators;
-      return Interfaces.C.C_FLoat(Sample);
+      return Interfaces.C.C_FLoat(Sample)*Interfaces.C.C_Float(0.1);
    end Super_Saw;
 
    function Saw(Time : Float; Pitch : Float; Sample_Rate : Float) return Float is
