@@ -1,6 +1,6 @@
 with Interfaces.C;
 use Interfaces.C;
-
+with Blep;
 package body Polyphony is
    Notes : Note_Array;
    procedure Add_Note(Pitch : Interfaces.C.C_Float) is

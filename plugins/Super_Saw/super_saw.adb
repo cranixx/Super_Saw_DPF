@@ -7,6 +7,7 @@ use Ada.Numerics;
 with Ada.Numerics.Elementary_Functions;
 use Ada.Numerics.Elementary_Functions;
 
+with Blep;
 package body Super_Saw is
    function Super_Saw(Time : Interfaces.C.C_Float; Pitch : Interfaces.C.C_Float;
                            Detune : Interfaces.C.C_Float; Mix : Interfaces.C.C_Float;
@@ -34,26 +35,8 @@ package body Super_Saw is
    end Super_Saw;
 
    function Saw(Time : Float; Pitch : Float; Sample_Rate : Float; Harmonics : Integer) return Float is
-      Number_Of_Harmonics : Integer := Harmonics;
-      Sample : Float := 0.0;
    begin
-  --    while 2.0*Pi*Pitch*Float(Number_Of_Harmonics) < Sample_Rate/2.0 loop
- --        Number_Of_Harmonics := Number_Of_Harmonics + 1;
---      end loop;
-
-      for I in 1 .. Number_Of_Harmonics loop
-         Sample := Sample + ((((1.0)**Float(I))*Sin(Float(I)*((2.0*Pi*Pitch)/Sample_Rate)*Time)));
-      end loop;
-      Sample := 0.5 - Sample/Pi;
-
-      -- Add a few extra sines to simulate aliasing above fundamental frequency of main oscillator
-     Simulate_Aliasing:for I in 1 .. Number_Of_Harmonics loop
-            if (0.5-2.0*Pi*Float(I)*Pitch/Sample_Rate) >=  (2.0*Pi*Pitch)/Sample_Rate then
-           Sample := Sample + Sin((0.5-2.0*Pi*Float(I)*Pitch/Sample_Rate)*Time)*0.6;
-         end if;
-      end loop Simulate_Aliasing;
-
-      return Sample;
+      return Blep.BLEP_Saw(Time,Pitch/Sample_Rate);
    end Saw;
    function Compute_Detune(Amount : Float) return Float is
    begin
