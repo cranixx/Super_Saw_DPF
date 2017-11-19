@@ -26,13 +26,12 @@ package body Polyphony is
    function Compute_Polyphony(Time : Interfaces.C.C_Float;
                               Pitch : Interfaces.C.C_Float;Detune : Interfaces.C.C_Float;
                               Mix : Interfaces.C.C_Float;
-                              Sample_Rate : Interfaces.C.C_Float;
-                              Harmonics : Interfaces.C.int) return Interfaces.C.C_Float is
+                              Sample_Rate : Interfaces.C.C_Float) return Interfaces.C.C_Float is
       Sample : Interfaces.C.C_Float := 0.0;
    begin
       for I in 0..(Number_Of_Notes-1) loop
          Sample := Sample + Super_Saw.Super_Saw(Time,Interfaces.C.C_Float(Notes(I)),
-                                                Detune,Mix,Sample_Rate,Harmonics);
+                                                Detune,Mix,Sample_Rate);
       end loop;
       return Sample;
    end Compute_Polyphony;

@@ -11,30 +11,30 @@ with Blep;
 package body Super_Saw is
    function Super_Saw(Time : Interfaces.C.C_Float; Pitch : Interfaces.C.C_Float;
                            Detune : Interfaces.C.C_Float; Mix : Interfaces.C.C_Float;
-                           Sample_Rate : Interfaces.C.C_Float; Harmonics : Interfaces.C.int)
+                           Sample_Rate : Interfaces.C.C_Float)
      return Interfaces.C.C_Float is
       Offsets : Offset_Array_Type := (0.01952356,0.06288439,0.11002313);
       Sample : Float := 0.0;
       Mix_Level : Mix_Level_Type := Compute_Mix(Float(Mix));
    begin
       -- Main oscillator
-      Sample := Sample + Saw(Float(Time),Float(Pitch), Float(Sample_Rate),Integer(Harmonics))*Mix_Level.Master;
+      Sample := Sample + Saw(Float(Time),Float(Pitch), Float(Sample_Rate))*Mix_Level.Master;
 
       -- 3 oscillators of higher pitch than main
       Higher_Oscillators:for D in 1 .. 3 loop
          Sample := Sample + Saw(Float(Time),Float(Pitch)*(1.0+Offsets(D)*Compute_Detune(Float(Detune))),
-                                Float(Sample_Rate),Integer(Harmonics))*Mix_Level.Slave;
+                                Float(Sample_Rate))*Mix_Level.Slave;
       end loop Higher_Oscillators;
 
       -- 3 oscillators of lower pitch than main
       Lower_Oscillators:for D in 1 .. 3 loop
          Sample := Sample + Saw(Float(Time),Float(Pitch)*(1.0+Offsets(D)*Compute_Detune(Float(Detune))),
-                                Float(Sample_Rate),Integer(Harmonics))*Mix_Level.Slave;
+                                Float(Sample_Rate))*Mix_Level.Slave;
       end loop Lower_Oscillators;
       return Interfaces.C.C_FLoat(Sample);
    end Super_Saw;
 
-   function Saw(Time : Float; Pitch : Float; Sample_Rate : Float; Harmonics : Integer) return Float is
+   function Saw(Time : Float; Pitch : Float; Sample_Rate : Float) return Float is
    begin
       return Blep.BLEP_Saw(Time,Pitch/Sample_Rate);
    end Saw;
