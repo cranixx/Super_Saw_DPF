@@ -9,7 +9,7 @@ package body Blep is
 
    function Naive_Saw(Phase : Float; Frequency: Float) return Float is
    begin
-      return (Phase*Frequency) mod 1.0;
+      return Modulo((Phase*Frequency),1.0);
    end Naive_Saw;
 
    function Poly_BLEP(Phase : Float; Phase_Step : Float) return Float is
@@ -26,22 +26,13 @@ package body Blep is
       end if;
    end Poly_BLEP;
 
-   function "mod" (Dividend : Float; Divisor : Float) return Float is
-      Tmp : Float := Dividend;
+   function modulo (Dividend : Float; Divisor : Float) return Float is
+      Fraction : Float;
+      Int_Part : Integer;
    begin
-      if Tmp = Divisor then
-         return 0.0;
-      elsif Tmp < Divisor then
-         return Tmp;
-      else
-         while Tmp >= Divisor loop
-            Tmp := Tmp - Divisor;
-         end loop;
-         if Tmp < 0.01 then
-            Tmp := 0.0;
-         end if;
-         return Tmp;
-      end if;
-   end "mod";
+     Int_Part := Integer(Dividend);
+     Fraction := Dividend - Float(Int_Part);
+     return Float((Int_Part mod Integer(Divisor))) + Fraction;
+   end modulo;
 end Blep;
 

@@ -8,6 +8,6 @@ package Blep is
 private
    function Naive_Saw(Phase : Float; Frequency : Float) return Float;
    function Poly_BLEP(Phase : Float; Phase_Step : Float) return Float;
-    function "mod" (Dividend : Float; Divisor : Float) return Float;
+    function modulo (Dividend : Float; Divisor : Float) return Float;
 end Blep;
 
