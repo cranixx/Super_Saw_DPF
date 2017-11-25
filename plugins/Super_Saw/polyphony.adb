@@ -1,49 +1,48 @@
 with Interfaces.C;
 use Interfaces.C;
-with Blep;
+
+with Super_Saw;
+
 package body Polyphony is
-   Notes : Note_Array;
-   procedure Add_Note(Pitch : Interfaces.C.C_Float) is
+   procedure Add_Note (Pitch : C_Float) is
    begin
-      if Number_Of_Notes < Maximum_Num_Of_Notes then
-         if Note_Exist(Pitch) = False then
-            Notes(Number_Of_Notes) := Float(Pitch);
-            Number_Of_Notes := Number_Of_Notes + 1;
-         end if;
+      if Note_Count <= Voices then
+         for I in Notes'Range loop
+            if Notes(I) = 0.0 then
+               Notes(I) := Float(Pitch);
+               Note_Count := Note_Count + 1;
+               exit;
+            end if;
+         end loop;
       end if;
    end Add_Note;
 
-   procedure Remove_Note(Pitch : Interfaces.C.C_Float) is
+   procedure Remove_Note (Pitch : C_Float) is
    begin
-      for I in Notes'Range loop
-         if Notes(I) = Float(Pitch) then
-            Notes(I) := 0.0;
-            Number_Of_Notes := Number_Of_Notes - 1;
-         end if;
-      end loop;
+      if Note_Count > 0 then
+         for I in Notes'Range loop
+            if Notes(I) = Float(Pitch) then
+               Notes(I) := 0.0;
+               Note_Count := Note_Count - 1;
+               exit;
+            end if;
+         end loop;
+      end if;
    end Remove_Note;
 
-   function Compute_Polyphony(Time : Interfaces.C.C_Float;
-                              Pitch : Interfaces.C.C_Float;Detune : Interfaces.C.C_Float;
-                              Mix : Interfaces.C.C_Float;
-                              Sample_Rate : Interfaces.C.C_Float) return Interfaces.C.C_Float is
-      Sample : Interfaces.C.C_Float := 0.0;
+   function Compute_Polyphony (Time : C_Float;
+                               Detune : C_Float; Mix : C_Float;
+                               Sample_Rate : C_Float) return C_Float is
+      Sample : C_Float := 0.0;
    begin
-      for I in 0..(Number_Of_Notes-1) loop
-         Sample := Sample + Super_Saw.Super_Saw(Time,Interfaces.C.C_Float(Notes(I)),
-                                                Detune,Mix,Sample_Rate);
+      for I in Notes'Range loop
+         if Notes(I) /= 0.0 then
+            Sample := Sample + Super_Saw.Super_Saw(Time => Time, Pitch => C_Float(Notes(I)),
+                                                  Detune => Detune, Mix => Mix,
+                                                   Sample_Rate => Sample_Rate);
+         end if;
       end loop;
       return Sample;
    end Compute_Polyphony;
-
-   function Note_Exist (Pitch : Interfaces.C.C_Float) return Boolean is
-   begin
-      for I in Notes'Range loop
-         if Notes(I) = Float(Pitch) then
-            return True;
-         end if;
-      end loop;
-      return False;
-   end Note_Exist;
 end Polyphony;
 

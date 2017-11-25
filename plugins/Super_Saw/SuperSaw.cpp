@@ -4,7 +4,7 @@ extern "C" void adainit(void);
 extern "C" void adafinal(void);
 extern "C" void Add_Note(float);
 extern "C" void Remove_Note(float);
-extern "C" float Compute_Polyphony(float,float,float,float,float);
+extern "C" float Compute_Polyphony(float,float,float,float);
 
 START_NAMESPACE_DISTRHO
 class SuperSaw : public Plugin
@@ -114,7 +114,7 @@ protected:
       frequency = pow(2.0,(note-57.0)/12.0)*440.0;
       Add_Note(frequency);
       for(i=0;i<frames;i++){
-        outputs[0][i] = Compute_Polyphony(phase,frequency,detune,mix,getSampleRate())/50.0;
+        outputs[0][i] = Compute_Polyphony(phase,detune,mix,getSampleRate())/50.0;
         phase++;
     }
     } else if (status == 0x80) //Note off
