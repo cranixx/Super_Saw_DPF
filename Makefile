@@ -16,12 +16,7 @@ ifeq ($(HAVE_DGL),true)
 endif
 
 plugins: libs
-	$(MAKE) all -C plugins/Info
-	$(MAKE) all -C plugins/Latency
-	$(MAKE) all -C plugins/Meters
-	$(MAKE) all -C plugins/Parameters
-	$(MAKE) all -C plugins/States
-	$(MAKE) all -C plugins/Super_Saw
+		$(MAKE) all -C plugins/Super_Saw
 
 gen: plugins dpf/utils/lv2_ttl_generator
 	@$(CURDIR)/dpf/utils/generate-ttl.sh
@@ -39,11 +34,6 @@ ifeq ($(HAVE_DGL),true)
 	$(MAKE) clean -C dpf/dgl
 endif
 	$(MAKE) clean -C dpf/utils/lv2-ttl-generator
-	$(MAKE) clean -C plugins/Info
-	$(MAKE) clean -C plugins/Latency
-	$(MAKE) clean -C plugins/Meters
-	$(MAKE) clean -C plugins/Parameters
-	$(MAKE) clean -C plugins/States
 
 # --------------------------------------------------------------
 
