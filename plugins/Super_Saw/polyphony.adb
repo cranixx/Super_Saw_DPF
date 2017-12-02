@@ -1,6 +1,8 @@
 with Interfaces.C;
 use Interfaces.C;
 
+with Ada.Numerics.Generic_Elementary_Functions;
+
 with Super_Saw;
 
 package body Polyphony is
@@ -33,13 +35,15 @@ package body Polyphony is
    function Compute_Polyphony (Time : C_Float;
                                Detune : C_Float; Mix : C_Float;
                                Sample_Rate : C_Float) return C_Float is
+      package Float_Functions is new Ada.Numerics.Generic_Elementary_Functions (Float);
       Sample : C_Float := 0.0;
    begin
       for I in Notes'Range loop
          if Notes(I) /= 0.0 then
+            -- Compensate for changes in volume by dividing output by logarithm of frequency
             Sample := Sample + Super_Saw.Super_Saw(Time => Time, Pitch => C_Float(Notes(I)),
                                                   Detune => Detune, Mix => Mix,
-                                                   Sample_Rate => Sample_Rate);
+                                                   Sample_Rate => Sample_Rate)/C_Float(Float_Functions.Log(Notes(I)*30.0,10.0));
          end if;
       end loop;
       return Sample;
