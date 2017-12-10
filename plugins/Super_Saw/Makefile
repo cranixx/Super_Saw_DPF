@@ -55,6 +55,7 @@ ADA:
 #BASE_FLAGS +=  super_saw.o b~super_saw.o  -lgnat -lgnarl -lgmem
 BASE_FLAGS +=  super_saw.o polyphony.o b~polyphony.o blep.o   -lgnat -lgnarl -lgmem
 BASE_FLAGS += -L/usr/lib/gcc/x86_64-redhat-linux/6.3.1/adalib
+BASE_FLAGS += -L/usr/lib/gcc/x86_64-linux-gnu/7/adalib # Required for Ubuntu 17.10
 
 all: ADA $(TARGETS)
 
