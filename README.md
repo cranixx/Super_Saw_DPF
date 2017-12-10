@@ -7,8 +7,11 @@ DSP code is plugged in into DPF framework for easier generation
 of lv2 plugin.
 
 Current status: It souds different from JP-8000 but IMO good.
-There is issue around polyphony handling, and compensation
-of volume change in function of pitch does not work as good as i would like it to.
+There is issue around polyphony handling.
+
+Current algorithm of generation of sawtooth wave is BLEP.
+To each discontinuity is added sinc windowed with Hamming window.
+It performs better than PolyBLEP.
 
 I have wrote this plugin mainly for easier testing of DSP, which i would like to
 run on microcontroller.
