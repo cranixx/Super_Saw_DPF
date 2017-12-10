@@ -1,8 +1,5 @@
 package body Blep is
   function BLEP_Saw(Phase : Float; Pitch : Float) return Float is
-     Sample : Float := Naive_Saw(Phase, Pitch);
-     Step : Float := Naive_Saw(1.0,Pitch) - Naive_Saw(0.0,Pitch);
-     Blep : Float := Poly_BLEP(Sample, Step);
   begin
      return Naive_Saw(Phase, Pitch)+Sinc(Modulo(Phase,1.0/Pitch))*
                                          Hamming(Modulo(Phase,1.0/Pitch),1.0/Pitch);
