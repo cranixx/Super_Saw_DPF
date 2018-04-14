@@ -4,6 +4,7 @@ extern "C" void adainit(void);
 extern "C" void adafinal(void);
 extern "C" void Add_Note(float);
 extern "C" void Remove_Note(float);
+extern "C" float Super_Saw(float,float,float,float,float);
 extern "C" float Compute_Polyphony(float,float,float,float);
 
 START_NAMESPACE_DISTRHO
@@ -103,27 +104,54 @@ protected:
   }
 
 
-  void run(const float** inputs, float** outputs, uint32_t frames, const MidiEvent* midiEvents, uint32_t midiEventCount) override {
-    uint32_t i;
-    const uint8_t*  data = midiEvents[0].data;
-    const uint8_t status = data[0] & 0xF0;
+  void run(const float** inputs, float** outputs, uint32_t frames, const MidiEvent* midiEvents,
+           uint32_t midiEventCount) override {
+    const uint8_t*  data;
+    uint8_t status;
     uint8_t note;
     float frequency;
-    if (status == 0x90) { //Note on
-      note = data[1];
-      frequency = pow(2.0,(note-57.0)/12.0)*440.0;
-      Add_Note(frequency);
-      for(i=0;i<frames;i++){
-        outputs[0][i] = Compute_Polyphony(phase,detune,mix,getSampleRate());
-        phase++;
-    }
-    } else if (status == 0x80) //Note off
-    {
-      note = data[1];
-      frequency = pow(2.0,(note-57.0)/12.0)*440.0;
+    uint32_t framesDone=0;
+    uint32_t curEventIndex=0;
+
+    while (framesDone < frames) {
+      while (curEventIndex < midiEventCount && framesDone == midiEvents[curEventIndex].frame) {
+        if ( midiEvents[curEventIndex].size > MidiEvent::kDataSize )
+          continue;
+        data=midiEvents[curEventIndex].data;
+        status=data[0]&0xFF;
+        if ( ! ( ( status == 0x80 || status == 0x90))) {
+          curEventIndex++;
+          continue;
+        }
+        note=data[1];
+        if (status == 0x90) {
+          frequency=pow(2.0,(note-57.0)/12.0)*440.0;
+          Add_Note(frequency);
+        } else if (status == 0x80) {
+          //          frequency = 0.0;
+          frequency=pow(2.0,(note-57.0)/12.0)*440.0;
           Remove_Note(frequency);
+        }
+        curEventIndex++;
+      }
+      //outputs[0][framesDone]=sin(phase*frequency/44100.0*2.0*3.14);
+      //outputs[0][framesDone]=sin(phase*frequency/44100.0*2.0*3.14);
+      outputs[0][framesDone]=Compute_Polyphony(phase,detune,mix,getSampleRate());
+      phase++;
+      framesDone++;
     }
-}
+    /*data=midiEvents[0].data;
+    status=data[0]&0xFF;
+     if (status == 0x90){
+      note=data[1];
+      frequency=pow(2.0,(note-57.0)/12.0)*440.0;
+      for (i=0;i<frames;i++){
+        outputs[0][i] = sin(phase*2.0*3.14*frequency);
+        phase++;
+      }
+      }*/
+  } //run
+
 private:
   float phase=0;
   float detune;
