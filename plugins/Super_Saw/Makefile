@@ -53,8 +53,8 @@ ADA:
 	gnat bind -n b~polyphony
 
 #BASE_FLAGS +=  super_saw.o b~super_saw.o  -lgnat -lgnarl -lgmem
-BASE_FLAGS +=  super_saw.o polyphony.o b~polyphony.o blep.o   -lgnat -lgnarl -lgmem -ggdb
-BASE_FLAGS += -L/usr/lib/gcc/x86_64-redhat-linux/6.4.1/adalib
+BASE_FLAGS +=  super_saw.o polyphony.o b~polyphony.o blep.o  -lgnat -lgnarl -lgmem -ggdb
+BASE_FLAGS += -L/usr/lib/gcc/x86_64-redhat-linux/7/adalib
 
 all: ADA $(TARGETS)
 
